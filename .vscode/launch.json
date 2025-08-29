@@ -1,6 +1,16 @@
 {
-    "version": "0.2.0",
-    "configurations": [
-
-    ]
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Launch URL Shortener",
+      "type": "go",
+      "request": "launch",
+      "mode": "debug",
+      "program": "${workspaceFolder}/cmd/url-shortener",
+      "env": {
+        "CONFIG_PATH": "C:/Users/artem/Golang_Projects/url-shortener/config/local.yaml",
+        "CGO_ENABLED": "1"
+      }
+    }
+  ]
 }
