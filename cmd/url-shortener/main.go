@@ -2,8 +2,10 @@ package main
 
 import (
 	"log/slog"
+	//"net/http"
 	"os"
 	"url-shortener/internal/config"
+	"url-shortener/internal/http-server/handlers/url/save"
 	mwLogger "url-shortener/internal/http-server/middleware/logger"
 	"url-shortener/internal/lib/logger/handlers/slogpretty"
 	"url-shortener/internal/lib/logger/sl"
@@ -43,12 +45,23 @@ func main() {
 
 	// middleware
 	router.Use(middleware.RequestID)
-	router.Use(middleware.Logger)
+	router.Use(middleware.Logger) // Logger всех входящих запросов
 	router.Use(mwLogger.New(log))
 	router.Use(middleware.Recoverer)
 	router.Use(middleware.URLFormat)
 
+	router.Post("/url", save.New(log, storage))
+
+	log.Info("starting server", slog.String("address", cfg.HTTPServer.Address))
 	//TODO: run server
+
+	//srv := http.Server{
+	//	Addr:         cfg.HTTPServer.Address,
+	//	Handler:      router,
+	//	ReadTimeout:  cfg.HTTPServer.Timeout,
+	//	WriteTimeout: cfg.HTTPServer.Timeout,
+	//	IdleTimeout:  cfg.HTTPServer.IdleTimeout,
+	//}
 }
 
 func setupLogger(env string) *slog.Logger {
