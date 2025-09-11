@@ -3,6 +3,7 @@ package main
 import (
 	"log/slog"
 	"net/http"
+	"url-shortener/internal/http-server/handlers/redirect"
 
 	//"net/http"
 	"os"
@@ -28,7 +29,9 @@ func main() {
 
 	log := setupLogger(cfg.Env)
 
-	log.Info("starting utl-shortener", slog.String("env", cfg.Env))
+	log.Info("starting utl-shortener",
+		slog.String("env", cfg.Env))
+
 	log.Debug("debug messages are enabled")
 	// TODO: init logger: slog
 
@@ -52,8 +55,13 @@ func main() {
 	router.Use(middleware.URLFormat)
 
 	router.Post("/url", save.New(log, storage))
+	router.Get("/{alias}", redirect.New(log, storage))
+	
+	//TODO: доделать deleteurl
+	//router.Delete("/url/{alias}", delete.New(log, storage))
 
-	log.Info("starting server", slog.String("address", cfg.HTTPServer.Address))
+	log.Info("starting server",
+		slog.String("address", cfg.HTTPServer.Address))
 	//TODO: run server
 
 	srv := http.Server{
