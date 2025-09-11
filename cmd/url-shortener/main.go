@@ -2,6 +2,8 @@ package main
 
 import (
 	"log/slog"
+	"net/http"
+
 	//"net/http"
 	"os"
 	"url-shortener/internal/config"
@@ -28,7 +30,6 @@ func main() {
 
 	log.Info("starting utl-shortener", slog.String("env", cfg.Env))
 	log.Debug("debug messages are enabled")
-	log.Error("error messages are enabled")
 	// TODO: init logger: slog
 
 	//TODO: init storage: sqlite
@@ -55,13 +56,17 @@ func main() {
 	log.Info("starting server", slog.String("address", cfg.HTTPServer.Address))
 	//TODO: run server
 
-	//srv := http.Server{
-	//	Addr:         cfg.HTTPServer.Address,
-	//	Handler:      router,
-	//	ReadTimeout:  cfg.HTTPServer.Timeout,
-	//	WriteTimeout: cfg.HTTPServer.Timeout,
-	//	IdleTimeout:  cfg.HTTPServer.IdleTimeout,
-	//}
+	srv := http.Server{
+		Addr:         cfg.HTTPServer.Address,
+		Handler:      router,
+		ReadTimeout:  cfg.HTTPServer.Timeout,
+		WriteTimeout: cfg.HTTPServer.Timeout,
+		IdleTimeout:  cfg.HTTPServer.IdleTimeout,
+	}
+	if err := srv.ListenAndServe(); err != nil {
+		log.Error("failed to start server")
+	}
+	log.Error("server stopped")
 }
 
 func setupLogger(env string) *slog.Logger {
