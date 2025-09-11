@@ -54,9 +54,17 @@ func main() {
 	router.Use(middleware.Recoverer)
 	router.Use(middleware.URLFormat)
 
-	router.Post("/url", save.New(log, storage))
+	router.Route("/url", func(r chi.Router) {
+		r.Use(middleware.BasicAuth("url-shortener", map[string]string{
+			cfg.HTTPServer.Username: cfg.HTTPServer.Password,
+		}))
+
+		r.Post("/", save.New(log, storage))
+		// TODO: add DELETE /url/{id}
+	})
+
 	router.Get("/{alias}", redirect.New(log, storage))
-	
+
 	//TODO: доделать deleteurl
 	//router.Delete("/url/{alias}", delete.New(log, storage))
 

@@ -16,7 +16,7 @@ import (
 
 // Перевод
 type Request struct {
-	URL   string `json:"url" validate:"required, url"`
+	URL   string `json:"url" validate:"required"`
 	Alias string `json:"alias,omitempty"` // Не обязательный параметр
 }
 
