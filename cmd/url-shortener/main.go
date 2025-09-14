@@ -61,12 +61,10 @@ func main() {
 
 		r.Post("/", save.New(log, storage))
 		// TODO: add DELETE /url/{id}
+		//router.Delete("/url/{id}", delete.New(log, storage))
 	})
 
 	router.Get("/{alias}", redirect.New(log, storage))
-
-	//TODO: доделать deleteurl
-	//router.Delete("/url/{alias}", delete.New(log, storage))
 
 	log.Info("starting server",
 		slog.String("address", cfg.HTTPServer.Address))

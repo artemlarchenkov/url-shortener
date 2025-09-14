@@ -2,14 +2,13 @@ package redirect
 
 import (
 	"errors"
-	slog2 "log/slog"
 	"net/http"
-	"url-shortener/internal/storage/sqllite"
+
+	"log/slog"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/go-chi/render"
-	"golang.org/x/exp/slog"
 
 	resp "url-shortener/internal/lib/api/response"
 	"url-shortener/internal/lib/logger/sl"
@@ -18,12 +17,12 @@ import (
 
 // URLGetter интерфейс, которому должен соответствовать storage
 //
-//go:generate go run github.com/vektra/mockery/v2@v2.28.2 --name=URLGetter
+//go:generate mockery --name=URLGetter --output=./mocks --outpkg=mocks
 type URLGetter interface {
 	GetURL(alias string) (string, error)
 }
 
-func New(log *slog2.Logger, urlGetter *sqllite.Storage) http.HandlerFunc {
+func New(log *slog.Logger, urlGetter URLGetter) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		const op = "handlers.url.redirect.New"
 
