@@ -54,7 +54,7 @@ go run cmd/url-shortener/main.go
 ```json
 {
   "url": "https://example.com",
-  "alias": "myalias"  // необязательный
+  "alias": "myalias" 
 }
 ```
 
